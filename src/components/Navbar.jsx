@@ -18,7 +18,9 @@ const Navbar = () => {
   const links = (
     <>
       <NavLink className="mr-2" to="/">Home</NavLink>
-      <NavLink className="mr-2" to="/allVolunteerPost">All volunteer Need posts</NavLink>
+      <NavLink className="mr-2" to="/allVolunteerPost">Link 1</NavLink>
+      <NavLink className="mr-2" to="/allVolunteerPost">Link 2</NavLink>
+      <NavLink className="mr-2" to="/allVolunteerPost">Link 3</NavLink>
       
     </>
   );
@@ -70,14 +72,14 @@ const Navbar = () => {
               tabIndex={0}
               className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-[-2] w-52 p-2 shadow"
             >
-              <p className="text-center">{user?.displayName}</p>
-              <button onClick={handleLogout} className="btn">
+              <p className="text-center">{user?.displayName? user.displayName : "Anonymous User"}</p>
+              <button onClick={handleLogout} className="text-sm cursor-pointer bg-blue-500 text-white px-10 py-2.5">
                 <li >Log out</li>
               </button>
             </ul>
           </div>
         ) : (
-          <Link to="/login" className="btn">
+          <Link to="/login" className=" text-sm cursor-pointer bg-blue-500 text-white px-10 py-2.5">
             Login
           </Link>
         )}

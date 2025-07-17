@@ -3,6 +3,7 @@ import GoogleLogin from "../components/GoogleLogin";
 import { AuthContext } from "../context/AuthProvider";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { assets } from "../assets/asstes";
 
 const Login = () => {
   const {loginUser, createUser,handleUpdateUser} = useContext(AuthContext)
@@ -44,7 +45,7 @@ const Login = () => {
   };
 
   return (
-    <div className=" min-h-[95vh] flex">
+    <div className=" min-h-[95vh] flex relative">
       <form
         onSubmit={handleSubmit}
         className="flex flex-col items-center justify-center border p-8 w-[90%] sm:max-w-96 m-auto gap-4 text-gray-800"
@@ -111,6 +112,12 @@ const Login = () => {
         </button>
         <GoogleLogin />
       </form>
+
+            <img
+              src={assets.gradientBackground}
+              className="absolute -top-50 -z-1 opacity-50"
+              alt=""
+            />
     </div>
   );
 };
