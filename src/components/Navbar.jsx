@@ -1,8 +1,20 @@
+import { useContext } from "react";
 import { Link, NavLink } from "react-router-dom";
+import { AuthContext } from "../context/AuthProvider";
+import toast from "react-hot-toast";
 
 const Navbar = () => {
-  const user = false;
-
+  const {user, logOut} = useContext(AuthContext)
+  
+  const handleLogout = async()=>{
+    try {
+      const result = await logOut();
+      console.log("logged out", result)
+      toast.success("Logged Out Successfully")
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
   const links = (
     <>
       <NavLink className="mr-2" to="/">Home</NavLink>
@@ -38,7 +50,7 @@ const Navbar = () => {
             {links}
           </ul>
         </div>
-        <Link to="/" className="btn btn-ghost text-xl">Authentication APP</Link>
+        <Link to="/" className="btn btn-ghost text-base sm:text-xl">Authentication APP</Link>
       </div>
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1">{links}</ul>
@@ -50,7 +62,7 @@ const Navbar = () => {
               <div className="w-10 rounded-full">
                 <img
                   alt="Tailwind CSS Navbar component"
-                  src={ "https://placeimg.com/192/192/people"}
+                  src={user.photoURL? user.photoURL : "https://static.vecteezy.com/system/resources/previews/032/176/191/non_2x/business-avatar-profile-black-icon-man-of-user-symbol-in-trendy-flat-style-isolated-on-male-profile-people-diverse-face-for-social-network-or-web-vector.jpg" }
                 />
               </div>
             </div>
@@ -59,7 +71,7 @@ const Navbar = () => {
               className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-[-2] w-52 p-2 shadow"
             >
               <p className="text-center">{user?.displayName}</p>
-              <button  className="btn">
+              <button onClick={handleLogout} className="btn">
                 <li >Log out</li>
               </button>
             </ul>

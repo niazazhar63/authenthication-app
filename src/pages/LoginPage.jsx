@@ -1,19 +1,46 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import GoogleLogin from "../components/GoogleLogin";
+import { AuthContext } from "../context/AuthProvider";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const Login = () => {
+  const {loginUser, createUser,handleUpdateUser} = useContext(AuthContext)
   const [currentState, setCurrentState] = useState("login");
+  const navigate = useNavigate()
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("")
 
   // submit form here to login
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
-
-
-    
+    if(currentState ==="login"){
+      try{
+        const result = await loginUser(email, password);
+        console.log("logged in from login page", result.user);
+        toast.success("Successfully Logged In")
+        navigate("/")
+      }catch(error){
+        console.error("Login Failed", error.message)
+        toast.error(error.message)
+      }
+    }else{
+        try{
+          const result = await createUser(email,password);
+          handleUpdateUser({
+            displayName: name
+          })
+          console.log("Acc created", result.user);
+          toast.success("Successfully Created Account")
+          navigate('/')
+        }catch(error){
+          console.error("Login Failed", error.message)
+          toast.error(error.message)
+        }
+      }
   };
 
   return (
@@ -34,7 +61,7 @@ const Login = () => {
             onChange={(e) => setName(e.target.value)}
             value={name}
             type="text"
-            className="w-full px-3 py-1 border border-gray-800"
+            className="w-full px-3 py-1 border outline-none border-gray-500"
             placeholder="Name"
             required
           />
@@ -43,7 +70,7 @@ const Login = () => {
           onChange={(e) => setEmail(e.target.value)}
           value={email}
           type="email"
-          className="w-full px-3 py-1 border border-gray-800"
+          className="w-full px-3 py-1 border outline-none border-gray-500"
           placeholder="Email"
           required
         />
@@ -51,11 +78,13 @@ const Login = () => {
           onChange={(e) => setPassword(e.target.value)}
           value={password}
           type="password"
-          className="w-full px-3 border py-1 border-gray-800"
+          className="w-full px-3 border py-1 outline-none border-gray-500"
           placeholder="Password"
           required
           autoComplete="current-password"
         />
+
+        
 
         <div className="w-full flex justify-end  text-sm ">
           {currentState === "login" ? (
