@@ -4,14 +4,15 @@ import { AuthContext } from "../context/AuthProvider";
 
 const PrivateRoute = ({ children }) => {
   const { user, loading } = useContext(AuthContext);
+  const adminEmail = import.meta.env.VITE_ADMIN_EMAIL;
 
   if (loading) return <p>Loading...</p>;
 
-  if (!user) {
-    return <Navigate to="/login" replace />;
+  if (user && user.email === adminEmail) {
+    return children;
   }
 
-  return children;
+  return <Navigate to="/"></Navigate>;
 };
 
 export default PrivateRoute;

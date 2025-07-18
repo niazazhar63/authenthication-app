@@ -4,6 +4,7 @@ import LandingPage from './pages/LandingPage'
 import LoginPage from './pages/LoginPage'
 import Dashboard from './pages/Admin/Dashboard'
 import AllUsers from './pages/Admin/AllUsers'
+import PrivateRoute from './Routes/PrivateRoute'
 
 function App() {
 
@@ -16,7 +17,7 @@ function App() {
       {/* dashboard route here  */}
       <Route
       path='dashboard'
-      element={<Dashboard />}
+      element={<PrivateRoute> <Dashboard /> </PrivateRoute> }
       >
       <Route index element={<AllUsers />}></Route>
 
