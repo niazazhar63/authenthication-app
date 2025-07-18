@@ -76,6 +76,11 @@ const Navbar = () => {
               <button onClick={handleLogout} className="text-sm cursor-pointer bg-blue-500 text-white px-10 py-2.5">
                 <li >Log out</li>
               </button>
+              {
+                user.email === import.meta.env.VITE_ADMIN_EMAIL && <button  className="text-sm cursor- mt-2 bg-blue-500 text-white px-10 py-2.5">
+                <NavLink to="/dashboard/users">Dashboard</NavLink>
+              </button>
+              }
             </ul>
           </div>
         ) : (
