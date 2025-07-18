@@ -4,44 +4,57 @@ import { AuthContext } from "../context/AuthProvider";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { assets } from "../assets/asstes";
+import useAxiosPublic from "../hooks/useAxiosPublic";
 
 const Login = () => {
-  const {loginUser, createUser,handleUpdateUser} = useContext(AuthContext)
+  const axiosPublic = useAxiosPublic();
+  const { loginUser, createUser, handleUpdateUser } = useContext(AuthContext);
   const [currentState, setCurrentState] = useState("login");
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("")
+  const [error, setError] = useState("");
 
   // submit form here to login
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
+    const userData = {
+      email: email,
+      name: name,
+      photo: "https://static.vecteezy.com/system/resources/previews/032/176/191/non_2x/business-avatar-profile-black-icon-man-of-user-symbol-in-trendy-flat-style-isolated-on-male-profile-people-diverse-face-for-social-network-or-web-vector.jpg"
+    };
     e.preventDefault();
-    if(currentState ==="login"){
-      try{
+    if (currentState === "login") {
+      try {
         const result = await loginUser(email, password);
         console.log("logged in from login page", result.user);
-        toast.success("Successfully Logged In")
-        navigate("/")
-      }catch(error){
-        console.error("Login Failed", error.message)
-        toast.error(error.message)
+        toast.success("Successfully Logged In");
+        navigate("/");
+      } catch (error) {
+        console.error("Login Failed", error.message);
+        toast.error(error.message);
       }
-    }else{
-        try{
-          const result = await createUser(email,password);
-          handleUpdateUser({
-            displayName: name
-          })
-          console.log("Acc created", result.user);
-          toast.success("Successfully Created Account")
-          navigate('/')
-        }catch(error){
-          console.error("Login Failed", error.message)
-          toast.error(error.message)
-        }
+    } else {
+      try {
+        const result = await createUser(email, password);
+        handleUpdateUser({
+          displayName: name,
+        });
+        axiosPublic.post("/users", userData).then((res) => {
+          if (res.status === 200) {
+            console.log("Acc created", result.user);
+        toast.success("Successfully Created Account");
+        navigate("/");
+          } else {
+            toast.error("Something Went Wrong");
+          }
+        });
+      } catch (error) {
+        console.error("Login Failed", error.message);
+        toast.error(error.message);
       }
+    }
   };
 
   return (
@@ -85,8 +98,6 @@ const Login = () => {
           autoComplete="current-password"
         />
 
-        
-
         <div className="w-full flex justify-end  text-sm ">
           {currentState === "login" ? (
             <p
@@ -113,11 +124,11 @@ const Login = () => {
         <GoogleLogin />
       </form>
 
-            <img
-              src={assets.gradientBackground}
-              className="absolute -top-50 -z-1 opacity-50"
-              alt=""
-            />
+      <img
+        src={assets.gradientBackground}
+        className="absolute -top-50 -z-1 opacity-50"
+        alt=""
+      />
     </div>
   );
 };
