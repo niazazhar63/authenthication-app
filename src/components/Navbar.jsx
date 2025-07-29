@@ -19,8 +19,6 @@ const Navbar = () => {
     <>
       <NavLink className="mr-2" to="/">Home</NavLink>
       <NavLink className="mr-2" to="/allVolunteerPost">Link 1</NavLink>
-      <NavLink className="mr-2" to="/allVolunteerPost">Link 2</NavLink>
-      <NavLink className="mr-2" to="/allVolunteerPost">Link 3</NavLink>
       
     </>
   );
@@ -72,7 +70,8 @@ const Navbar = () => {
               tabIndex={0}
               className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-[-2] w-52 p-2 shadow"
             >
-              <p className="text-center">{user?.displayName? user.displayName : "Anonymous User"}</p>
+              <p className="text-center py-2 items-center justify-center flex">{user?.displayName? user.displayName : "Anonymous User"} {user?.emailVerified && <img
+              className="h-5 w-5" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWPaTlWqQ-UigcmguBbCorE4U1p6a3AfeWRQ&s"></img> } </p>
               <button onClick={handleLogout} className="text-sm cursor-pointer bg-blue-500 text-white px-10 py-2.5">
                 <li >Log out</li>
               </button>

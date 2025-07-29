@@ -12,18 +12,21 @@ const Login = () => {
   const [currentState, setCurrentState] = useState("login");
   const navigate = useNavigate();
 
+  const [loading, setLoading] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  // const [error, setError] = useState("");
 
   // submit form here to login
   const handleSubmit = async (e) => {
     const userData = {
       email: email,
       name: name,
-      photo: "https://static.vecteezy.com/system/resources/previews/032/176/191/non_2x/business-avatar-profile-black-icon-man-of-user-symbol-in-trendy-flat-style-isolated-on-male-profile-people-diverse-face-for-social-network-or-web-vector.jpg"
+      photo:
+        "https://static.vecteezy.com/system/resources/previews/032/176/191/non_2x/business-avatar-profile-black-icon-man-of-user-symbol-in-trendy-flat-style-isolated-on-male-profile-people-diverse-face-for-social-network-or-web-vector.jpg",
     };
+    setLoading(true)
     e.preventDefault();
     if (currentState === "login") {
       try {
@@ -35,25 +38,31 @@ const Login = () => {
         console.error("Login Failed", error.message);
         toast.error(error.message);
       }
+      finally{
+        setLoading(false)
+      }
     } else {
       try {
-        const result = await createUser(email, password);
-        handleUpdateUser({
-          displayName: name,
-        });
-        axiosPublic.post("/users", userData).then((res) => {
-          if (res.status === 200) {
-            console.log("Acc created", result.user);
-        toast.success("Successfully Created Account");
-        navigate("/");
-          } else {
-            toast.error("Something Went Wrong");
-          }
-        });
-      } catch (error) {
-        console.error("Login Failed", error.message);
-        toast.error(error.message);
-      }
+  const result = await createUser(email, password);
+
+  // Await the user update (if it returns a promise)
+  await handleUpdateUser({
+    displayName: name,
+  });
+
+  const res = await axiosPublic.post("/users", userData);
+  if(res.status === 200){
+    navigate("/")
+    toast.success("Account Created! A verification email sent to your email!")
+  }
+  
+} catch (error) {
+  console.error("Sign Up Failed", error);
+  toast.error(error.message || "Sign Up Failed");
+} finally {
+  setLoading(false);
+}
+
     }
   };
 
@@ -118,8 +127,13 @@ const Login = () => {
         <button
           type="submit"
           className="bg-black cursor-pointer text-white w-full font-white px-8 py-2 mt-4"
+          disabled={loading}
         >
-          {currentState === "login" ? "Login" : "Sign Up"}
+          {currentState === "login"
+            ? `Login`
+            : `Sign Up`}
+
+              {loading && <span className="loading loading-spinner loading-sm"></span>}
         </button>
         <GoogleLogin />
       </form>
